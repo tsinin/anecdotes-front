@@ -1,0 +1,128 @@
+.anecdote-text, .anecdote-author, .anecdote-date, .anecdote-likes {
+    line-height: 1.5;
+    color: ghostwhite;
+    text-align: left;
+    white-space: pre-line;
+    padding-bottom: 3px;
+}
+.anecdote-likes {
+    padding-right: 10px;
+}
+.anecdote-like-block {
+    padding-top: 10px;
+}
+.wrapper {
+    padding-left: 15%;
+    padding-right: 15%;
+    align-content: center;
+}
+.anecdote-wrapper {
+    align-content: center;
+}
+.anecdote-body {
+    background-color: #151515;
+    padding: 12px 20px;
+    border: 2px outset #ee8302;
+    border-radius: 4px;
+    margin: 8px 0;
+}
+.anecdote-separator {
+    text-align: center;
+    font-size: 20px;
+}
+.anecdote-date, .anecdote-author {
+    text-align: right;
+    color: lightslategrey;
+}
+.anecdote-like-btn {
+    padding: 5px 10px;
+    background-color: black;
+    color: ghostwhite;
+    text-align: center;
+    text-decoration: none;
+    font-size: 15px;
+    border-radius: 4px;
+    border: 1px outset #ee8302;
+}
+
+#create-anecdote-block {
+    width: 100%;
+}
+.default-btn {
+    background-color: black;
+    color: ghostwhite;
+    text-align: center;
+    text-decoration: none;
+    font-size: 15px;
+    border-radius: 4px;
+    border: 1px outset #ee8302;
+}
+
+button#create-new-anecdote-btn {
+    padding: 8px 30px;
+    margin: 8px 10px;
+}
+
+button#post-anecdote-btn {
+    padding: 4px 15px;
+    margin: 10px 0;
+}
+
+button#sign-in-btn {
+    padding: 4px 15px;
+    margin: 10px 0;
+}
+
+button#sign-up-btn {
+    padding: 4px 15px;
+    margin: 10px 0;
+}
+
+button#post-anecdote-btn {
+    padding: 4px 15px;
+    margin: 10px 0;
+}
+
+#create-anecdote-header {
+    text-align: center;
+    color: ghostwhite;
+}
+
+#create-anecdote-publisher {
+    color: ghostwhite;
+}
+
+.form-item textarea {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 2px outset #ee8302;
+    border-radius: 8px;
+    background-color: #474747;
+    color: ghostwhite;
+}
+.form-item select {
+    text-decoration-width: 100px;
+    padding: 8px 10px;
+    margin: 8px 0;
+    border: 2px outset #ee8302;
+    border-radius: 4px;
+    color: ghostwhite;
+    background-color: #474747;
+}
+.form-item textarea:focus, select:focus {
+    outline: none !important;
+    border: 2px outset #ee8302;
+    box-shadow: 5px 5px 10px #240f00;
+}
+
+.login-or-password {
+    padding: 4px 4px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 2px outset #ee8302;
+    border-radius: 2px;
+    background-color: #474747;
+    color: ghostwhite;
+}
