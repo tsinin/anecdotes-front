@@ -1,8 +1,9 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import logo from '../pictures/logo.png'
 import {Link} from "react-router-dom";
 import {useSelector, useDispatch} from 'react-redux'
 import {useHistory} from "react-router-dom";
+import {signOut} from "../actions/auth";
 
 function LoginButton() {
     const history = useHistory();
@@ -11,17 +12,19 @@ function LoginButton() {
         dispatch({"type": "updateLogin"})
     }, [dispatch])
 
-    const creds = useSelector((state: State) => state.Login)
 
-    const logOut = React.useCallback(
+    dispatch({"type": "updateLogin"})
+    let login = useSelector((state: State) => state.Login)
+
+    const handleSignOut = React.useCallback(
         async (event: React.SyntheticEvent) => {
-            window.localStorage.removeItem("creds")
+            signOut();
             dispatch({"type": "logOut"})
             history.push("/")
         }, [dispatch, history]
     )
 
-    if (!creds.loggedIn || creds.user === null) {
+    if (!login.loggedIn || !login.user || !login.user.username) {
         return (
             <Link className="login" to="/sign-in">Войти</Link>
         )
@@ -29,11 +32,11 @@ function LoginButton() {
         return (
             <a className="login-dropdown">
                 <div className="nav-dropdown" id="nav-login-dropdown">
-                    <button className="nav-dropbtn">{creds.user.name}<i className="fa fa-caret-down"/>
+                    <button className="nav-dropbtn">{login.user.username}<i className="fa fa-caret-down"/>
                     </button>
                     <div className="nav-dropdown-content">
-                        <Link to="/my-anecdotes">Мои анекдоты</Link>
-                        <a onClick={logOut}>
+                        {/*<Link to="/my-anecdotes">Мои анекдоты</Link>*/}
+                        <a onClick={handleSignOut}>
                             Выйти
                         </a>
                     </div>
@@ -44,29 +47,22 @@ function LoginButton() {
 }
 
 function TopNavigation() {
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch({"type": "updateLogin"})
+    }, [dispatch])
     return (
         <div className="topnav">
             <Link className="home" to="/"><img className="logo" src={logo}/></Link>
-            <div className="nav-dropdown">
-                <button className="nav-dropbtn">Лучшие<i className="fa fa-caret-down"/>
-                </button>
-                <div className="nav-dropdown-content">
-                    <Link to="/best/day">За сегодня</Link>
-                    <Link to="/best/week">За неделю</Link>
-                    <Link to="/best/ever">За всё время</Link>
-                </div>
-            </div>
             {/*<div className="nav-dropdown">*/}
-            {/*    <button className="nav-dropbtn">Категории<i className="fa fa-caret-down"/>*/}
+            {/*    <button className="nav-dropbtn">Лучшие<i className="fa fa-caret-down"/>*/}
             {/*    </button>*/}
             {/*    <div className="nav-dropdown-content">*/}
-            {/*        <Link to="/categories/1">1</Link>*/}
-            {/*        <Link to="/categories/2">2</Link>*/}
-            {/*        <Link to="/categories/3">3</Link>*/}
-            {/*        <Link to="/categories/4">4</Link>*/}
+            {/*        <Link to="/best/day">За сегодня</Link>*/}
+            {/*        <Link to="/best/week">За неделю</Link>*/}
+            {/*        <Link to="/best/ever">За всё время</Link>*/}
             {/*    </div>*/}
             {/*</div>*/}
-            {/*<Link className="about" to="/about">О сайте</Link>*/}
             <LoginButton/>
         </div>
     );

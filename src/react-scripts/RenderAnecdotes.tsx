@@ -25,9 +25,7 @@ const RenderAnecdotes: React.FC<RenderAnecdotesInput> = (input) => {
                         Написать анекдот
                     </button>
                 </Link>
-                <div>
-                    Loading...
-                </div>
+                <div>Loading...</div>
             </main>
         )
     }

@@ -1,1 +1,0 @@
-export default "https://anecdotes-json-server.herokuapp.com"

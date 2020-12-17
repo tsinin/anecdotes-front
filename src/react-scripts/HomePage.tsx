@@ -3,7 +3,7 @@ import RenderAnecdotes from "./RenderAnecdotes";
 
 function HomePage() {
     return (
-        <RenderAnecdotes query={"/anecdotes"}/>
+        <RenderAnecdotes query={"anecdotes"}/>
     )
 }
 

@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {useHistory} from "react-router-dom";
-import {useSelector, useDispatch} from 'react-redux'
-import backendDomain from "../backendDomain";
+import {useDispatch} from 'react-redux'
+import {ApiClient} from "../services/ApiClient";
 
 function CreateForm() {
     const dispatch = useDispatch();
@@ -9,11 +9,13 @@ function CreateForm() {
         dispatch({"type": "updateLogin"})
     }, [dispatch])
 
+    const isAuth = Boolean(window.localStorage.getItem("auth_access"))
     const history = useHistory();
     const [text, setText] = React.useState("")
-    const [author, setAuthor] = React.useState("anon")
-    const login = useSelector((state: State) => state.Login)
 
+    if (!isAuth) {
+        history.push("/sign-in");
+    }
 
     const handleSubmit = React.useCallback(
         async (event: React.SyntheticEvent) => {
@@ -23,64 +25,26 @@ function CreateForm() {
             }
 
             const date = new Date()
-            const anecdote: Omit<IAnecdote, "id"> = {
-                date: date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear(),
+            const anecdote: any = {
+                date: date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(),
                 text,
-                author: (author === "myself" && login.user !== null) ? login.user.name : author,
                 likes: 0,
-                who_liked_it: []
+                whoLikedIt: "[]"
             };
 
-            await fetch(`${backendDomain}/anecdotes`,
+            await ApiClient("anecdotes/",
                 {
                     method: "POST",
                     headers: {
-                    "Content-Type": "Application/json",
+                        "Content-Type": "Application/json",
                     },
                     body: JSON.stringify(anecdote)
-            });
+                })
 
             history.push("/")
         },
-        [author, history, login, text]
+        [history, text]
     )
-
-    function Publisher(props: any) {
-        if (props.isLoggedIn) {
-            return (
-                <div className="form-item">
-                    <label><p id="create-anecdote-publisher">От кого публиковать</p></label>
-                    <label>
-                        <select className="new-publisher"
-                                name="publisher"
-                                value={author}
-                                onChange={(event => {
-                                    setAuthor(event.target.value)
-                                })}>
-                            <option value="Аноним">Анонимно</option>
-                            <option value="myself">От моего имени</option>
-                        </select>
-                    </label>
-                </div>
-            )
-        } else {
-            return (
-                <div className="form-item">
-                    <label><p id="create-anecdote-publisher">От кого публиковать</p></label>
-                    <label>
-                        <select className="new-publisher"
-                                name="publisher"
-                                value={author}
-                                onChange={(event => {
-                                    setAuthor(event.target.value)
-                                })}>
-                            <option value="Аноним">Анонимно</option>
-                        </select>
-                    </label>
-                </div>
-                )
-        }
-    }
 
     return (
         <div className="center-block">
@@ -101,7 +65,6 @@ function CreateForm() {
                                 />
                             </label>
                         </div>
-                        <Publisher isLoggedIn={login.loggedIn}/>
                     </div>
                     <button type="submit"
                             className="default-btn"

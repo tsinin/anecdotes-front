@@ -1,17 +1,17 @@
 const initAnecdotesState: LoadAnecdotesState = {
-    "anecdotes": [],
-    "isLoading": false
+    anecdotes: [],
+    isLoading: false
 }
 
 
-export default (state: LoadAnecdotesState, action: any) => {
-    if (state === undefined) {
-        return initAnecdotesState;
-    } else if (action.type === "loadingAnecdotes") {
+const LoadAnecdote = (state: LoadAnecdotesState = initAnecdotesState, action: any) => {
+    if (action.type === "loadingAnecdotes") {
         return {"anecdotes": [], "isLoading": true}
     } else if (action.type === 'saveAnecdotes') {
-        return {"anecdotes": action["response"], "isLoading": false}
+        return {"anecdotes": action.response, "isLoading": false}
     } else {
         return state
     }
 }
+
+export default LoadAnecdote;

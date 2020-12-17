@@ -1,51 +1,46 @@
 import React from 'react';
-import {useHistory, Link} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import {useSelector, useDispatch} from 'react-redux'
-import backendDomain from "../backendDomain";
+import {ApiClient} from "../services/ApiClient";
+import {signIn} from "../actions/auth";
 
 function SignUpPage() {
     const dispatch = useDispatch()
     const history = useHistory();
-    const [login, setLogin] = React.useState("")
+    const [username, setUsername] = React.useState("")
     const [password, setPassword] = React.useState("")
-
-    const creds = useSelector((state: State) => state.Login)
-
+    // const isAuth = Boolean(window.localStorage.getItem("auth_access"))
+    const isAuth = useSelector((state: State) => state.Login.loggedIn)
 
     const handleSubmit = React.useCallback(
         async (event: React.SyntheticEvent) => {
             dispatch({"type": "loadingLogin"})
-
-            const creds: Omit<IUser, "id"> = {
-                name: login,
-                password: password
-            };
-
             try {
-                await fetch(
-                    `${backendDomain}/users?name=${login}&password=${password}`,
+                const response = await ApiClient(
+                    `users/`,
                     {
                         method: "POST",
                         headers: {
                             "Content-Type": "Application/json",
                         },
-                        body: JSON.stringify(creds)
-                    });
+                        body: JSON.stringify({username, password})
+                    })
+                console.log(response)
+
+                signIn(username, password)
 
             } catch(err) {
                 console.log(err)
                 dispatch({"type": "logOut"})
             }
-
             history.push("/")
-        }, [dispatch, history, login, password]
+        }, [dispatch, history, username, password]
     )
 
-    if (creds.loggedIn) {
+    if (isAuth) {
         return (
             <div>
                 <h3>You're logged in.</h3>
-
                 <button type="submit"
                         className="sign-out-button"
                         onClick={handleSubmit}>
@@ -64,9 +59,9 @@ function SignUpPage() {
                     <input className="login-or-password"
                            name="text"
                            placeholder="login"
-                           value={login}
+                           value={username}
                            onChange={(e) => {
-                               setLogin(e.target.value)}}/>
+                               setUsername(e.target.value)}}/>
                 </div>
                 <div>
                     <div>
@@ -74,6 +69,7 @@ function SignUpPage() {
                     </div>
                     <input className="login-or-password"
                            name="text"
+                           type="password"
                            placeholder="password"
                            value={password}
                            onChange={(e) => {
@@ -85,7 +81,6 @@ function SignUpPage() {
                         onClick={handleSubmit}>
                     Зарегистрироваться
                 </button>
-
             </div>
         )
     }

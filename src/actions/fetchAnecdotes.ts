@@ -1,5 +1,5 @@
 import {Dispatch} from 'redux'
-import backendDomain from '../backendDomain'
+import {ApiClient} from "../services/ApiClient";
 
 export function fetchAnecdotes(query: string) {
     return async (dispatch: Dispatch) => {
@@ -7,22 +7,21 @@ export function fetchAnecdotes(query: string) {
         let anecdotes;
 
         try {
-            const response = await fetch(`${backendDomain}${query}`, {
-                headers: {
-                    "Content-Type": "Application/json",
-                },
-            });
+            const response = await ApiClient(`${query}/`,
+                {
+                    headers: {
+                            "Content-Type": "Application/json",
+                    },
+                })
 
             anecdotes = {"response": await response.json(),
                          "type": "saveAnecdotes"};
-            console.log(`${backendDomain}/${query}`)
-            console.log("fetch results: ", JSON.stringify(anecdotes))
-
+            console.log(anecdotes)
             dispatch(anecdotes)
+            console.log(anecdotes)
 
         } catch(err) {
             console.log(err)
-            // dispatch(postsFetchError())
         }
     }
 

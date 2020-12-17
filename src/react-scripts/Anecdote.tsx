@@ -1,6 +1,5 @@
-import React, {useState} from 'react';
-import {useSelector, useDispatch} from 'react-redux'
-import backendDomain from "../backendDomain";
+import React, {useState} from 'react'
+import {ApiClient} from "../services/ApiClient";
 
 interface AnecdoteInput {
     anecdote: IAnecdote
@@ -8,53 +7,37 @@ interface AnecdoteInput {
 
 
 const Anecdote: React.FC<AnecdoteInput> = (input) => {
-    const login = useSelector((state: State) => state.Login)
+    let anecdote: IAnecdote = input.anecdote
+    const isAuth = Boolean(window.localStorage.getItem("auth_access"))
+    const [likeNum, setLikeNum] = useState(anecdote.likes)
     const [rerenderState, rerender] = useState(false)
+
 
     const LikeClick = React.useCallback(
         async (event: React.SyntheticEvent) => {
-            if (login.user === null || login.user.id === null) {
-                return
-            }
-            if (input.anecdote.who_liked_it !== null &&
-                input.anecdote.who_liked_it.includes(login.user.id)) {
-
-                input.anecdote.likes--
-                const index = input.anecdote.who_liked_it.indexOf(login.user.id)
-                input.anecdote.who_liked_it.splice(index, 1)
-
-            } else {
-                input.anecdote.likes++
-                if (input.anecdote.who_liked_it === null) {
-                    input.anecdote.who_liked_it = []
-                }
-                input.anecdote.who_liked_it.push(login.user.id)
-            }
-
             try {
-                console.log(JSON.stringify(input.anecdote))
-                await fetch(
-                    `${backendDomain}/anecdotes/${input.anecdote.id}`,
+                const response = await ApiClient(`likes/${anecdote.id}`,
                     {
-                        method: "PATCH",
+                        method: "POST",
                         headers: {
                             "Content-Type": "Application/json",
-                        },
-                        body: JSON.stringify(input.anecdote)
-                    });
+                        }
+                    })
+                setLikeNum((await response.json()).new_likes)
+                anecdote.likes = likeNum
                 rerender(!rerenderState)
             } catch (err) {
                 console.log(err)
             }
-        }, [input, login, rerenderState])
+        }, [anecdote, likeNum, rerenderState])
 
 
     const LikeButton = () => {
-        if (login.loggedIn) {
+        if (isAuth) {
             return (
                 <div className="anecdote-like-block">
                     <a className="anecdote-likes">
-                        {input.anecdote.likes}
+                        {likeNum}
                     </a>
                     <button className="anecdote-like-btn"
                             onClick={LikeClick}>
@@ -66,7 +49,7 @@ const Anecdote: React.FC<AnecdoteInput> = (input) => {
         return (
             <div>
                 <a className="anecdote-likes">
-                    {input.anecdote.likes}
+                    {likeNum}
                 </a>
             </div>
         )
@@ -75,14 +58,14 @@ const Anecdote: React.FC<AnecdoteInput> = (input) => {
         <div className="anecdote-wrapper">
             <div className="anecdote-body">
                 <div className="anecdote-author">
-                    {input.anecdote.author}
+                    {anecdote.author.username}
                 </div>
                 <div className="anecdote-text">
-                    {input.anecdote.text}
+                    {anecdote.text}
                 </div>
                 <LikeButton/>
                 <div className="anecdote-date">
-                    {input.anecdote.date}
+                    {anecdote.date}
                 </div>
             </div>
             <div className="anecdote-separator">***</div>

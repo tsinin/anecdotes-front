@@ -1,29 +1,31 @@
 /// <reference types="react-scripts" />
 
+
+interface IUser {
+    id: number
+    username: string
+}
+
 interface IAnecdote {
     text: string
     date: string
-    author: string
+    author: IUser
     likes: number
     id: number
-    who_liked_it: any
+    whoLikedIt: any
 }
-interface IUser {
-    id: number
-    name: string
-    password: string
-}
-
 
 
 interface LoadAnecdotesState {
     isLoading: boolean
-    anecdotes: []
+    anecdotes: IAnecdote[]
 }
+
 interface LoginState {
     isLoading: boolean
     loggedIn: boolean
-    token: string | null
+    access_token: string | null
+    refresh_token: string | null
     user: IUser | null
 }
 
